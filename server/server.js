@@ -61,6 +61,25 @@ app.get('/todos/:id', (req, res) => {
   });
 });
 
+app.delete('/todos/:id', (req, res) => {
+  var id = req.params.id;
+
+  if (!ObjectId.isValid(id)) { // blogas id
+    return res.status(404).send();
+  }
+
+  Todo.findByIdAndRemove(id).then((todo) => { // nera tokio id, bet jis geras
+    if (!todo) {
+      return res.status(404).send();
+    }
+    res.send({
+      todo
+    });
+  }).catch((e) => {
+    res.status(400).send(); // erroriukas
+  });
+});
+
 app.listen(port, () => {
   console.log(`Started on port ${port}`);
 });
